@@ -19,5 +19,5 @@ class Recipe(recipe.Recipe):
             # zbar incorrectly passes CPPFLAGS to WINDRES, which then barfs on
             # args it can't understand
             self.set_env('CPPFLAGS', '')
-        if self.config.target_platform in [Platform.IOS, Platform.DARWIN]:
+        if self.config.target_platform in [Platform.IOS, Platform.TVOS, Platform.DARWIN]:
             self.autoreconf = True

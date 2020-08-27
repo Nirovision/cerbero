@@ -29,6 +29,7 @@ class Platform:
     DARWIN = 'darwin'
     ANDROID = 'android'
     IOS = 'ios'
+    TVOS = 'tvos'
 
 
 class Architecture:
@@ -64,6 +65,7 @@ class Distro:
     ARCH = 'arch'
     OS_X = 'osx'
     IOS = 'ios'
+    TVOS = 'tvos'
     ANDROID = 'android'
     GENTOO = 'gentoo'
     NONE = 'none'
@@ -214,6 +216,12 @@ class DistroVersion:
     def get_ios_sdk_version(version):
         if not version.startswith('ios_'):
             raise FatalError('Not an iOS version: ' + version)
+        return [int(s) for s in version[4:].split('_')]
+
+    @staticmethod
+    def get_tvos_sdk_version(version):
+        if not version.startswith('tvos_'):
+            raise FatalError('Not a tvOS version: ' + version)
         return [int(s) for s in version[4:].split('_')]
 
 class LicenseDescription:

@@ -70,10 +70,11 @@ class Bootstrapper (object):
 
         return bs
 
-from cerbero.bootstrap import linux, windows, android, osx, ios
+from cerbero.bootstrap import linux, windows, android, osx, ios, tvos
 
 linux.register_all()
 windows.register_all()
 android.register_all()
 osx.register_all()
 ios.register_all()
+tvos.register_all()

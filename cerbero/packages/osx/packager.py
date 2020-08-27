@@ -285,7 +285,7 @@ class ProductPackage(PackagerBase):
         packages = self.package.packages[:] + [(package.name, True, True)]
         self.package.packages = packages
         path = packager.pack(self.output_dir, self.fw_path)[0]
-        if self.config.target_platform == Platform.IOS:
+        if self.config.target_platform in [Platform.IOS, Platform.TVOS]:
             self.packages_paths[PackageType.DEVEL][package] = path
             self.empty_packages[PackageType.RUNTIME].append(package)
         else:
@@ -602,7 +602,7 @@ class IOSPackage(ProductPackage, FrameworkHeadersMixin):
 class Packager(object):
 
     def __new__(klass, config, package, store):
-        if config.target_platform == Platform.IOS:
+        if config.target_platform in [Platform.IOS, Platform.TVOS]:
             if not isinstance(package, MetaPackage):
                 raise FatalError ("iOS platform only support packages",
                                   "for MetaPackage")

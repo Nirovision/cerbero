@@ -35,7 +35,7 @@ from cerbero.utils import messages as m
 
 def get_optimization_from_config(config):
     if config.variants.optimization:
-        if config.target_platform in (Platform.ANDROID, Platform.IOS):
+        if config.target_platform in (Platform.ANDROID, Platform.IOS, Platform.TVOS):
             return 's'
         return '2'
     return '0'
@@ -425,7 +425,7 @@ class MakefilesBase (Build, ModifyEnvBase):
         # Disable site config, which is set on openSUSE
         self.set_env('CONFIG_SITE', when='now')
         # Only add this for non-meson recipes, and only for iPhoneOS
-        if self.config.ios_platform == 'iPhoneOS':
+        if self.config.ios_platform == 'iPhoneOS' or self.config.tvos_platform == 'AppleTVOS':
             bitcode_cflags = ['-fembed-bitcode']
             # NOTE: Can't pass -bitcode_bundle to Makefile projects because we
             # can't control what options they pass while linking dylibs
@@ -656,7 +656,7 @@ class CMake (MakefilesBase):
             self.configure_options += ['-G', 'Unix Makefiles']
 
         # FIXME: Maybe export the sysroot properly instead of doing regexp magic
-        if self.config.target_platform in [Platform.DARWIN, Platform.IOS]:
+        if self.config.target_platform in [Platform.DARWIN, Platform.IOS, Platform.TVOS]:
             r = re.compile(r".*-isysroot ([^ ]+) .*")
             sysroot = r.match(cflags).group(1)
             self.configure_options += ['-DCMAKE_OSX_SYSROOT=' + sysroot]

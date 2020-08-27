@@ -60,6 +60,7 @@ class Recipe(recipe.Recipe):
         Platform.WINDOWS: ['share/glib-2.0/schemas'],
         Platform.DARWIN: ['share/glib-2.0/schemas'],
         Platform.IOS: ['share/glib-2.0/schemas'],
+        Platform.TVOS: ['share/glib-2.0/schemas'],
     }
     #FIXME: Fill it when needed
     #files_gio = ['lib/gio/modules']
@@ -88,6 +89,7 @@ class Recipe(recipe.Recipe):
         Platform.ANDROID: ['lib/pkgconfig/gio-unix-2.0.pc', 'include/gio-unix-2.0'],
         Platform.DARWIN: ['lib/pkgconfig/gio-unix-2.0.pc', 'include/gio-unix-2.0'],
         Platform.IOS: ['lib/pkgconfig/gio-unix-2.0.pc', 'include/gio-unix-2.0'],
+        Platform.TVOS: ['lib/pkgconfig/gio-unix-2.0.pc', 'include/gio-unix-2.0'],
     }
 
     files_lang = ['glib20']
@@ -167,7 +169,7 @@ class Recipe(recipe.Recipe):
                     'glib/uwp/0019-TODO-gdbus-Completely-disable-when-building-for-WinR.patch',
                     'glib/uwp/0022-TODO-gio-gcontenttype-Needs-porting-to-WinRT-model.patch',
                 ]
-        elif self.config.target_platform in [Platform.DARWIN, Platform.IOS]:
+        elif self.config.target_platform in [Platform.DARWIN, Platform.IOS, Platform.TVOS]:
             self.files_devel.append(os.path.join('lib', 'glib-2.0', 'include', '*', 'glibconfig.h'))
             arch = self.config.target_arch
             if arch == Architecture.X86:
@@ -181,6 +183,11 @@ class Recipe(recipe.Recipe):
                 # Disable mac OS X specifics
                 extra_flags = ['-DGST_SDK_IOS=1']
                 # XXX: Why did we disable these for iOS?
+                #self.configure_options += ' --disable-carbon --disable-modular-tests --disable-cocoa'
+            if self.config.target_platform == Platform.TVOS:
+                # Disable mac OS X specifics
+                extra_flags = ['-DGST_SDK_TVOS=1']
+                # XXX: Why did we disable these for tvOS?
                 #self.configure_options += ' --disable-carbon --disable-modular-tests --disable-cocoa'
             self.append_env('CFLAGS', *extra_flags)
 
@@ -229,7 +236,7 @@ class Recipe(recipe.Recipe):
             self._set_gio_flags(path1, path2, use_old_uri_scheme)
 
     def post_install(self):
-        if self.config.target_platform in [Platform.IOS, Platform.DARWIN]:
+        if self.config.target_platform in [Platform.IOS, Platform.TVOS, Platform.DARWIN]:
             # For the universal build we need to ship glibconfig.h of both
             # architectures in a subfolder and include the correct one depending
             # on the compiler architecture

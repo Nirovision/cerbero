@@ -404,6 +404,10 @@ class Recipe(custom.GStreamer):
              'lib/gstreamer-1.0/libgstapplemedia%(mext)s',
              'lib/gstreamer-1.0/libgstshm%(mext)s',
             ],
+        Platform.TVOS: [
+             'lib/gstreamer-1.0/libgstapplemedia%(mext)s',
+             'lib/gstreamer-1.0/libgstshm%(mext)s',
+            ],
         Platform.ANDROID: [
              'lib/gstreamer-1.0/libgstopensles%(mext)s',
             ]
@@ -429,6 +433,10 @@ class Recipe(custom.GStreamer):
              'lib/gstreamer-1.0/libgstapplemedia.a', 'lib/gstreamer-1.0/libgstapplemedia.la',
              'lib/gstreamer-1.0/libgstshm.a', 'lib/gstreamer-1.0/libgstshm.la',
             ],
+        Platform.TVOS: [
+             'lib/gstreamer-1.0/libgstapplemedia.a', 'lib/gstreamer-1.0/libgstapplemedia.la',
+             'lib/gstreamer-1.0/libgstshm.a', 'lib/gstreamer-1.0/libgstshm.la',
+            ],
         Platform.ANDROID: [
              'lib/gstreamer-1.0/libgstopensles.a', 'lib/gstreamer-1.0/libgstopensles.la',
             ]
@@ -450,7 +458,7 @@ class Recipe(custom.GStreamer):
     def prepare(self):
         # Disable Cocoa NSApp integration since we enable the Cocoa MainLoop
         # integration in the GLib recipe
-        if self.config.target_platform in (Platform.DARWIN, Platform.IOS):
+        if self.config.target_platform in (Platform.DARWIN, Platform.IOS, Platform.TVOS):
             self.append_env('CFLAGS', '-DGSTREAMER_GLIB_COCOA_NSAPPLICATION=1')
             self.append_env('OBJCFLAGS', '-DGSTREAMER_GLIB_COCOA_NSAPPLICATION=1')
 
@@ -480,20 +488,20 @@ class Recipe(custom.GStreamer):
                 if self.config.msvc_version == 'vs14':
                     self.disable_plugin('d3d11', 'sys')
 
-        if self.config.target_platform in (Platform.LINUX, Platform.DARWIN, Platform.IOS):
+        if self.config.target_platform in (Platform.LINUX, Platform.DARWIN, Platform.IOS, Platform.TVOS):
             self.meson_options['shm'] = 'enabled'
 
-        if self.config.target_platform in (Platform.DARWIN, Platform.IOS):
+        if self.config.target_platform in (Platform.DARWIN, Platform.IOS, Platform.TVOS):
             self.meson_options['applemedia'] = 'enabled'
             self.deps += ['moltenvk']
         if self.config.target_platform in (Platform.ANDROID):
             self.deps += ['vulkan-android']
 
-        if self.config.target_platform not in (Platform.DARWIN, Platform.IOS, Platform.ANDROID) or \
-                (self.config.target_platform == Platform.IOS and self.config.target_arch != Architecture.ARM64):
+        if self.config.target_platform not in (Platform.DARWIN, Platform.IOS, Platform.TVOS, Platform.ANDROID) or \
+                (self.config.target_platform in [Platform.IOS, Platform.TVOS] and self.config.target_arch != Architecture.ARM64):
             self.disable_plugin('vulkan', 'vulkan', library_name='vulkan')
 
-        if self.using_uwp() or self.config.target_platform in (Platform.ANDROID, Platform.IOS):
+        if self.using_uwp() or self.config.target_platform in (Platform.ANDROID, Platform.IOS, Platform.TVOS):
             self.disable_plugin('resindvd', 'dvd', dep='libdvdnav')
 
         # dtls plugin needs openssl, and we pick up the system openssl if on

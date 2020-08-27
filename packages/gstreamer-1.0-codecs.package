@@ -27,6 +27,7 @@ class Package(custom.GStreamer, package.Package):
     platform_files = {
             Platform.ANDROID: ['tremor:libs'],
             Platform.IOS: ['tremor:libs'],
+            Platform.TVOS: ['tremor:libs'],
     }
 
     def prepare(self):

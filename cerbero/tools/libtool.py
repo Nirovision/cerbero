@@ -107,7 +107,7 @@ libdir='%(libdir)s'
 
         if platform == Platform.WINDOWS:
             shared_ext = 'dll.a'
-        elif platform in [Platform.DARWIN, Platform.IOS]:
+        elif platform in [Platform.DARWIN, Platform.IOS, Platform.TVOS]:
             shared_ext = 'dylib'
         else:
             shared_ext = 'so'

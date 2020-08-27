@@ -56,7 +56,7 @@ class Recipe(custom.GStreamer):
 
 
     def prepare(self):
-        if self.config.target_platform == Platform.IOS:
+        if self.config.target_platform in [Platform.IOS, Platform.TVOS]:
             # iOS only supports static builds so plugins must be linked
             # and registered statically.
             self.meson_options['registry'] = 'false'

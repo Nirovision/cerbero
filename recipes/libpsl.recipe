@@ -33,6 +33,8 @@ class Recipe(recipe.Recipe):
         # all, or to have an option to disable building of tests.
         if self.config.target_platform == Platform.IOS:
             self.patches += ['libpsl/0002-meson-Do-not-build-tests-on-iOS.patch']
+        elif self.config.target_platform == Platform.TVOS:
+            self.patches += ['libpsl/0002-meson-Do-not-build-tests-on-iOS.patch']
 
     def post_install(self):
         libtool_la = LibtoolLibrary('psl', 0, 0, 0, self.config.libdir,

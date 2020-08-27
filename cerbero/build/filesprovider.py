@@ -147,6 +147,8 @@ class FilesProvider(object):
         Platform.DARWIN: {'bext': '', 'sregex': _DYLIB_REGEX, 'sdir': 'lib',
             'mext': '.so', 'smext': '.a', 'pext': '.so', 'srext': '.dylib'},
         Platform.IOS: {'bext': '', 'sregex': _DYLIB_REGEX, 'sdir': 'lib',
+            'mext': '.so', 'smext': '.a', 'pext': '.so', 'srext': '.dylib'},
+        Platform.TVOS: {'bext': '', 'sregex': _DYLIB_REGEX, 'sdir': 'lib',
             'mext': '.so', 'smext': '.a', 'pext': '.so', 'srext': '.dylib'}}
 
     # Match static gstreamer plugins, GIO modules, etc.
@@ -179,7 +181,7 @@ class FilesProvider(object):
         from cerbero.build.build import BuildType
         if self.btype != BuildType.MESON:
             return False
-        if self.platform not in (Platform.DARWIN, Platform.IOS):
+        if self.platform not in (Platform.DARWIN, Platform.IOS, Platform.TVOS):
             return False
         # gstreamer plugins on macOS and iOS use the .dylib extension when
         # built with Meson but modules that use GModule do not
@@ -423,7 +425,7 @@ class FilesProvider(object):
         # It's ok if shared libraries aren't found for iOS, we only want the
         # static libraries. In fact, all recipes should only build static on
         # iOS, but most don't.
-        if notfound and self.config.target_platform != Platform.IOS:
+        if notfound and self.config.target_platform not in (Platform.IOS, Platform.TVOS):
             msg = "Some libraries weren't found while searching!"
             for each in notfound:
                 msg += '\n' + each
@@ -558,7 +560,7 @@ class FilesProvider(object):
                     pattern += 'lib/%(f)s.dll.a '
                     pattern += 'lib/%(f)s.def '
                     pattern += 'lib/%(fnolib)s.lib '
-                elif self.platform in [Platform.DARWIN, Platform.IOS]:
+                elif self.platform in [Platform.DARWIN, Platform.IOS, Platform.TVOS]:
                     pattern += 'lib/%(f)s.dylib '
 
             libsmatch = []

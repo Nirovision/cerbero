@@ -36,7 +36,7 @@ class Recipe(recipe.Recipe):
 
         if self.config.target_platform == Platform.WINDOWS:
             system = 'mingw'
-        elif self.config.target_platform in [Platform.DARWIN, Platform.IOS]:
+        elif self.config.target_platform in [Platform.DARWIN, Platform.IOS, Platform.TVOS ]:
             system = 'darwin'
         elif self.config.target_platform in [Platform.LINUX, Platform.ANDROID]:
             system = 'posix'

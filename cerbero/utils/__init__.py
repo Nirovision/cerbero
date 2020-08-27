@@ -491,6 +491,9 @@ def needs_xcode8_sdk_workaround(config):
     elif config.target_platform == Platform.IOS:
         if StrictVersion(config.ios_min_version) < StrictVersion('10.0'):
             return True
+    elif config.target_platform == Platform.TVOS:
+        if StrictVersion(config.tvos_min_version) < StrictVersion('10.0'):
+            return True
     return False
 
 def _qmake_or_pkgdir(qmake):
@@ -557,6 +560,8 @@ def detect_qt5(platform, arch, is_universal):
             ret = _qmake_or_pkgdir(os.path.join(qt5_prefix, 'clang_64/bin/qmake'))
     elif platform == Platform.IOS:
         ret = _qmake_or_pkgdir(os.path.join(qt5_prefix, 'ios/bin/qmake'))
+    elif platform == Platform.TVOS:
+        ret = _qmake_or_pkgdir(os.path.join(qt5_prefix, 'tvos/bin/qmake'))
     elif platform == Platform.LINUX:
         if arch == Architecture.X86_64:
             ret = _qmake_or_pkgdir(os.path.join(qt5_prefix, 'gcc_64/bin/qmake'))

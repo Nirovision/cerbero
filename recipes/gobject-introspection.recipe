@@ -87,7 +87,7 @@ class Recipe(recipe.Recipe):
 
     # TODO: catch the share/man stuff like man1/g-ir* ?
     async def configure(self):
-        if self.config.target_platform in [Platform.IOS, Platform.DARWIN]:
+        if self.config.target_platform in [Platform.IOS, Platform.TVOS, Platform.DARWIN]:
             if Architecture.is_arm(self.config.target_arch):
                 arch = 'arm'
             elif self.config.target_arch == Architecture.X86:

@@ -45,7 +45,7 @@ class Recipe(recipe.Recipe):
 
         # Default AS is $CC, except iOS (set below)
         if Architecture.is_arm(self.config.target_arch):
-            if self.config.target_platform == Platform.IOS:
+            if self.config.target_platform in [Platform.IOS, Platform.TVOS]:
                 gas = self.get_env('GAS')
                 if gas:
                     self.set_env('AS', gas)
@@ -67,7 +67,7 @@ class Recipe(recipe.Recipe):
                 # https://issuetracker.google.com/issues/37067983
                 # https://trac.ffmpeg.org/ticket/4928
                 libavextraconf += " --disable-asm"
-        elif self.config.target_platform == Platform.IOS:
+        elif self.config.target_platform in [Platform.IOS, Platform.TVOS]:
             # Some optimisations that were previously silently disabled
             # cause warnings now. Ignore them
             libavextraconf += " --extra-cflags='-Wno-ignored-optimization-argument' "
@@ -104,7 +104,7 @@ class Recipe(recipe.Recipe):
     async def configure(self):
         await super(recipe.Recipe, self).configure()
         libav_path = self.build_dir
-        if self.config.target_platform in [Platform.DARWIN, Platform.IOS]:
+        if self.config.target_platform in [Platform.DARWIN, Platform.IOS, Platform.TVOS]:
             if self.config.target_arch == Architecture.X86:
                 replacements = {'HAVE_EBX_AVAILABLE=yes': 'HAVE_EBX_AVAILABLE=no',
                                 'HAVE_EBX_AVAILABLE 1': 'HAVE_EBX_AVAILABLE 0',}

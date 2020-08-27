@@ -44,7 +44,7 @@ class BuildTools (BootstrapperBase, Fetch):
     def __init__(self, config, offline):
         BootstrapperBase.__init__(self, config, offline)
 
-        if self.config.target_platform in (Platform.IOS, Platform.WINDOWS):
+        if self.config.target_platform in (Platform.IOS, Platform.TVOS, Platform.WINDOWS):
             # Used by ffmpeg and x264 on iOS, and by openn264 on Windows-ARM64
             self.BUILD_TOOLS.append('gas-preprocessor')
         if self.config.target_platform != Platform.LINUX and not \

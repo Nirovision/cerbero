@@ -25,7 +25,7 @@ class Recipe(recipe.Recipe):
     def post_install(self):
         # XXX: Don't forget to keep this in sync with the library version!
         dependency_libs=[]
-        if self.config.target_platform == Platform.IOS:
+        if self.config.target_platform in [Platform.IOS, Platform.TVOS]:
             dependency_libs += ['-lc++']
         elif self.config.target_platform == Platform.DARWIN:
             dependency_libs += ['-lc++']

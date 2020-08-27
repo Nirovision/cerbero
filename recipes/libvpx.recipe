@@ -62,7 +62,7 @@ class Recipe(recipe.Recipe):
         elif self.config.target_arch == Architecture.ARM64:
             arch = 'arm64'
 
-        if self.config.target_platform in [Platform.DARWIN, Platform.IOS]:
+        if self.config.target_platform in [Platform.DARWIN, Platform.IOS, Platform.TVOS]:
             # make sure the linker uses the correct stdlib when building with
             # 10.13 which makes the usage of libstdc++ a hard error.
             self.append_env('LDFLAGS', '-stdlib=libc++')
@@ -73,6 +73,13 @@ class Recipe(recipe.Recipe):
         elif self.config.target_platform == Platform.IOS:
             if self.config.target_arch == Architecture.X86 or self.config.target_arch == Architecture.X86_64:
                 platform = 'iphonesimulator'
+            else:
+                platform = 'darwin'
+            if self.config.target_arch == Architecture.ARM:
+                arch = 'armv6'
+        elif self.config.target_platform == Platform.TVOS:
+            if self.config.target_arch == Architecture.X86 or self.config.target_arch == Architecture.X86_64:
+                platform = 'appletvsimulator'
             else:
                 platform = 'darwin'
             if self.config.target_arch == Architecture.ARM:
@@ -153,7 +160,7 @@ class Recipe(recipe.Recipe):
         await super().configure()
 
     async def install(self):
-        if self.config.target_platform in [Platform.DARWIN, Platform.IOS]:
+        if self.config.target_platform in [Platform.DARWIN, Platform.IOS, Platform.TVOS]:
             shell.touch(os.path.join(self.build_dir, 'libvpx.a'))
         await super().install()
 

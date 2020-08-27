@@ -29,7 +29,7 @@ class Recipe(recipe.Recipe):
                'librsvg/0001-build-Fix-enumtypes-on-MinGW-inside-MSYS-Windows.patch']
 
     def prepare(self):
-        if self.config.target_platform in [Platform.DARWIN, Platform.IOS]:
+        if self.config.target_platform in [Platform.DARWIN, Platform.IOS, Platform.TVOS]:
             self.configure_options += ' --disable-Bsymbolic'
         # Fails on cross-ios and cross-win32
         if self.config.cross_compiling():
